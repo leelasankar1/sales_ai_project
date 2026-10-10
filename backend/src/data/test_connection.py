@@ -1,27 +1,18 @@
-from databricks_client import get_connection
+import os
+from dotenv import load_dotenv
+from databricks import sql
 
+load_dotenv()
 
-def test_connection():
-    connection = get_connection()
+host = os.getenv("DATABRICKS_SERVER_HOSTNAME")
+path = os.getenv("DATABRICKS_HTTP_PATH")
+token = os.getenv("DATABRICKS_TOKEN")
 
-    try:
-        cursor = connection.cursor()
+print("host :", repr(host))
+print("path :", repr(path))
+print("token:", (token[:4] + "..." + str(len(token)) + " chars") if token else None)
 
-        cursor.execute("""
-            SELECT
-                current_catalog() AS catalog,
-                current_schema() AS schema
-        """)
-
-        result = cursor.fetchone()
-
-        print("Databricks connection successful!")
-        print(f"Catalog: {result[0]}")
-        print(f"Schema: {result[1]}")
-
-    finally:
-        connection.close()
-
-
-if __name__ == "__main__":
-    test_connection()
+with sql.connect(server_hostname=host, http_path=path, access_token=token) as conn:
+    with conn.cursor() as cur:
+        cur.execute("SELECT 1")
+        print("OK:", cur.fetchone())
