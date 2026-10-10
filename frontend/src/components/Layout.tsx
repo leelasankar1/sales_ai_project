@@ -9,7 +9,7 @@ function Layout() {
     <div className="app-shell">
       <nav className="topbar">
         <div className="brand">
-          <span className="brand-mark">LeelaSankarChaganti</span>
+          <span className="brand-mark">LeelaSankar</span>
         </div>
         <div className="nav-links">
           <NavLink to="/" end className={navLinkClass}>
